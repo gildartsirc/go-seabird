@@ -3,6 +3,8 @@ package extra
 import (
 	"github.com/belak/go-seabird"
 	"github.com/belak/nut"
+	"seabird"
+	"github.com/jinzhu/gorm"
 )
 
 func init() {
@@ -10,20 +12,21 @@ func init() {
 }
 
 type dbConfig struct {
-	Filename string
+	Dialect string
+	Connection string
 }
 
-func newDBPlugin(b *seabird.Bot) (*nut.DB, error) {
+func newDBPlugin(b *seabird.Bot) (*gorm.DB, error) {
 	dbc := &dbConfig{}
 	err := b.Config("db", dbc)
 	if err != nil {
 		return nil, err
 	}
 
-	ndb, err := nut.Open(dbc.Filename, 0700)
+	db, err := gorm.Open(dbc.Dialect, dbc.Connection)
 	if err != nil {
 		return nil, err
 	}
 
-	return ndb, nil
+	return db, nil
 }

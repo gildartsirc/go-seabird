@@ -12,6 +12,11 @@ import (
 	"github.com/BurntSushi/toml"
 	"github.com/Sirupsen/logrus"
 	"github.com/codegangsta/inject"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mssql"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 
 	"github.com/belak/go-plugin"
 	"github.com/go-irc/irc"
@@ -32,6 +37,9 @@ type coreConfig struct {
 	TLSCert     string
 	TLSKey      string
 
+	DBDialect string
+	DBString  string
+
 	Cmds   []string
 	Prefix string
 
@@ -39,6 +47,8 @@ type coreConfig struct {
 
 	Debug bool
 }
+
+
 
 type duration struct {
 	time.Duration
@@ -66,6 +76,7 @@ type Bot struct {
 	registry *plugin.Registry
 	log      *logrus.Entry
 	injector inject.Injector
+	db *gorm.DB
 }
 
 // NewBot will return a new Bot given an io.Reader pointing to a
@@ -102,6 +113,12 @@ func NewBot(confReader io.Reader) (*Bot, error) {
 		b.log.Logger.Level = logrus.InfoLevel
 	}
 
+	// Set up database
+	b.db, err = gorm.Open(b.config.DBDialect, b.config.DBString)
+	if err != nil {
+		panic(err)
+	}
+
 	commandMux := NewCommandMux(b.config.Prefix)
 	mentionMux := NewMentionMux()
 
@@ -119,6 +136,10 @@ func NewBot(confReader io.Reader) (*Bot, error) {
 // GetLogger grabs the underlying logger for this bot.
 func (b *Bot) GetLogger() *logrus.Entry {
 	return b.log
+}
+
+func (b *Bot) GetDB() *gorm.DB {
+	return b.db
 }
 
 // CurrentNick returns the current nick of the bot.
