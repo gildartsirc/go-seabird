@@ -14,13 +14,16 @@ type PermissionsPlugin struct {
 
 type User struct {
 	gorm.Model
-	Type       string // 'mask', 'account', and 'channel' supported.
-	Identifier string // either a *!*@* mask, an account name, or a channel name.
+	Type        string       // 'mask', 'account', and 'channel' supported.
+	Identifier  string       // either a *!*@* mask, an account name, or a channel name.
+	Permissions []Permission `gorm:"many2many:user_permissions;"`
+	Roles       []Role       `gorm:"many2many:user_roles;"`
 }
 
 type Role struct {
 	gorm.Model
-	Name string
+	Name        string
+	Permissions []Permission `gorm:"many2many:role_permissions;"`
 }
 
 type Permission struct {
