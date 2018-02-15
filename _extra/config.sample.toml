@@ -25,7 +25,8 @@ plugins = [
 ]
 
 [db]
-filename = "dev.db"
+dialect = "lounge.db"
+connection = ""
 
 [ctcp]
 enablegit = false

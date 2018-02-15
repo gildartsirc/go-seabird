@@ -30,6 +30,9 @@ func (c *Channel) HasUser(user string) bool {
 type User struct {
 	channels map[string]map[rune]bool
 	Nick     string
+	Ident    string
+	Host     string
+	Account  string
 	UUID     string
 }
 
@@ -100,6 +103,8 @@ func newChannelTracker(bm *seabird.BasicMux, isupport *ISupportPlugin) *ChannelT
 	bm.Event("QUIT", p.quitCallback)
 	bm.Event("NICK", p.nickCallback)
 	bm.Event("MODE", p.modeCallback)
+
+	bm.Event("ACCOUNT", p.accountCallback)
 
 	bm.Event("352", p.whoCallback)
 	bm.Event("353", p.namesCallback)
