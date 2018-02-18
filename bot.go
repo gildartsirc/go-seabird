@@ -14,9 +14,9 @@ import (
 	"github.com/codegangsta/inject"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mssql"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
 
 	"github.com/belak/go-plugin"
 	"github.com/go-irc/irc"
@@ -48,8 +48,6 @@ type coreConfig struct {
 	Debug bool
 }
 
-
-
 type duration struct {
 	time.Duration
 }
@@ -76,7 +74,7 @@ type Bot struct {
 	registry *plugin.Registry
 	log      *logrus.Entry
 	injector inject.Injector
-	db *gorm.DB
+	db       *gorm.DB
 }
 
 // NewBot will return a new Bot given an io.Reader pointing to a

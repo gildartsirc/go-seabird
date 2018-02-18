@@ -43,5 +43,9 @@ func newPermissionsPlugin(b *seabird.Bot, isupport *ISupportPlugin, ctracker *Ch
 }
 
 func (p *PermissionPlugin) CheckPermission(m *irc.Message, perm string) (bool, error) {
+	user := p.ctracker.LookupUser(m.Prefix.Nick)
+	if user == nil {
+		// do something dramatic
+	}
 
 }

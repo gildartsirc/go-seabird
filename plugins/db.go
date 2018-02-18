@@ -3,8 +3,8 @@ package extra
 import (
 	"github.com/belak/go-seabird"
 	"github.com/belak/nut"
-	"seabird"
 	"github.com/jinzhu/gorm"
+	"seabird"
 )
 
 func init() {
@@ -12,7 +12,7 @@ func init() {
 }
 
 type dbConfig struct {
-	Dialect string
+	Dialect    string
 	Connection string
 }
 

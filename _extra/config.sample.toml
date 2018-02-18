@@ -17,7 +17,7 @@ prefix = "!"
 
 # Startup commands
 cmds = [
-  "JOIN #encoded"
+  "JOIN #botters-test"
 ]
 
 plugins = [
