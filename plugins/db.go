@@ -1,4 +1,4 @@
-package extra
+package plugins
 
 import (
 	"github.com/belak/go-seabird"
