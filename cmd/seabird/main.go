@@ -13,6 +13,8 @@ import (
 	_ "github.com/belak/go-seabird/plugins"
 	_ "github.com/belak/go-seabird/plugins/extra"
 	_ "github.com/belak/go-seabird/plugins/url"
+
+	// Load db drivers
 	_ "github.com/jinzhu/gorm/dialects/mssql"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/jinzhu/gorm/dialects/postgres"

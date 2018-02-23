@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	seabird.RegisterPlugin("db", newDBPlugin)
+	seabird.RegisterPlugin("sqldb", newSQLDBPlugin)
 }
 
 type dbConfig struct {
@@ -16,9 +16,9 @@ type dbConfig struct {
 	Connection string
 }
 
-func newDBPlugin(b *seabird.Bot) (*gorm.DB, error) {
+func newSQLDBPlugin(b *seabird.Bot) (*gorm.DB, error) {
 	dbc := &dbConfig{}
-	err := b.Config("db", dbc)
+	err := b.Config("sqldb", dbc)
 	if err != nil {
 		return nil, err
 	}
