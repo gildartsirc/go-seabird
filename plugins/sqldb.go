@@ -2,9 +2,7 @@ package plugins
 
 import (
 	"github.com/belak/go-seabird"
-	"github.com/belak/nut"
 	"github.com/jinzhu/gorm"
-	"seabird"
 )
 
 func init() {

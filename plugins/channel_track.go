@@ -239,6 +239,10 @@ func (p *ChannelTracker) modeCallback(b *seabird.Bot, m *irc.Message) {
 	b.Writef("WHO :%s", target)
 }
 
+func (p *ChannelTracker) accountCallback(b *seabird.Bot, m *irc.Message) {
+	// FIXME: Actually add something here to process ACCOUNT messages
+}
+
 func (p *ChannelTracker) whoCallback(b *seabird.Bot, m *irc.Message) {
 	// Filter out broken messages
 	if len(m.Params) < 7 {

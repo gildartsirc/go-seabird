@@ -2,6 +2,7 @@ package plugins
 
 import (
 	"github.com/belak/go-seabird"
+	"github.com/belak/go-seabird/plugins"
 	"github.com/go-irc/irc"
 	"github.com/jinzhu/gorm"
 )
@@ -11,8 +12,8 @@ func init() {
 }
 
 type PermissionsPlugin struct {
-	isupport *ISupportPlugin
-	ctracker *ChannelTracker
+	isupport *plugins.ISupportPlugin
+	ctracker *plugins.ChannelTracker
 	db       *gorm.DB
 
 	UserCache []PermUser
@@ -54,32 +55,46 @@ type Permission struct {
 	Description string
 }
 
-func newPermissionsPlugin(b *seabird.Bot, cm *seabird.CommandMux, isupport *ISupportPlugin, ctracker *ChannelTracker, db *gorm.DB) *PermissionsPlugin {
+func newPermissionsPlugin(b *seabird.Bot, cm *seabird.CommandMux, isupport *plugins.ISupportPlugin, ctracker *plugins.ChannelTracker, db *gorm.DB) *PermissionsPlugin {
 	p := &PermissionsPlugin{
 		isupport: isupport,
 		ctracker: ctracker,
 		db:       db,
 	}
 
-	cm.Event("adduser", p.addUserCallback, &seabird.HelpInfo{
-		Usage:       "<nick>",
+	cm.Event("user", p.userCallback, &seabird.HelpInfo{
+		Usage:       "<action> <nick> <params>",
+		Description: "Adds user to permission list. Defaults to using account for identification.",
+	})
+
+	cm.Event("user", p.roleCallback, &seabird.HelpInfo{
+		Usage:       "<action> <roll> <params>",
+		Description: "Adds user to permission list. Defaults to using account for identification.",
+	})
+
+	cm.Event("user", p.permCallback, &seabird.HelpInfo{
+		Usage:       "<action> <permission> <params>",
 		Description: "Adds user to permission list. Defaults to using account for identification.",
 	})
 
 	return p
 }
 
-func (p *PermissionsPlugin) RegisterPerm(domain string, name string) *Permission {
-	perm := &Permssion{}
+func (p *PermissionsPlugin) RegisterPerm(domain string, name string, desc string) *Permission {
+	perm := &Permission{}
 
-	p.db.FirstOrCreate(&perm, Permssion{Domain: domain, Name: name})
+	p.db.FirstOrCreate(&perm, Permission{ Domain: domain, Name: name })
+
+	perm.Description = desc
+
+	p.db.Save(&perm)
 
 	return perm
 }
 
 // Permitted should never error. Failure mode is to deny permission. When using to check
 func (p *PermissionsPlugin) Permitted(m *irc.Message, perms []string) bool {
-	user := p.ctracker.LookupUser(m.Prefix.Nick)
+	user := p.ctracker.LookupUser(m.Prefix.Name)
 	if user == nil {
 		// do something dramatic
 	}
@@ -91,34 +106,14 @@ func (p *PermissionsPlugin) Permitted(m *irc.Message, perms []string) bool {
 // no public functions below here
 //
 
-func (p *PermissionsPlugin) addUserCallback() {
+func (p *PermissionsPlugin) userCallback(b *seabird.Bot, m *irc.Message) {
 
 }
 
-func (p *PermissionsPlugin) addRoleCallback() {
+func (p *PermissionsPlugin) roleCallback(b *seabird.Bot, m *irc.Message) {
 
 }
 
-func (p *PermissionsPlugin) deleteUserCallback() {
-
-}
-
-func (p *PermissionsPlugin) deleteRoleCallback() {
-
-}
-
-func (p *PermissionsPlugin) grantPermissionCallback() {
-
-}
-
-func (p *PermissionsPlugin) revokePermissionCallback() {
-
-}
-
-func (p *PermissionsPlugin) grantRoleCallback() {
-
-}
-
-func (p *PermissionsPlugin) revokeRoleCallback() {
+func (p *PermissionsPlugin) permCallback(b *seabird.Bot, m*irc.Message) {
 
 }
